@@ -50,7 +50,9 @@ class Game
   {
     $hands = [];
     foreach ($this->players as $player) {
-      $hands[$player->getName()] = $player->peekAtCards($this->community_cards);
+      $rank = $player->peekAtCards($this->community_cards);
+      $name = $player->getName();
+      $hands[$rank][] = $name;
     }
     
     print_r($hands);

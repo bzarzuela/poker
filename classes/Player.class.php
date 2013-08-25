@@ -19,6 +19,11 @@ class Player
     return $this;
   }
   
+  public function getName()
+  {
+    return $this->name;
+  }
+  
   public function setCards($cards)
   {
     $this->cards = $cards;
@@ -27,7 +32,7 @@ class Player
   public function peekAtCards($community_cards)
   {
     $hand = new Hand;
-    $hand->setCards($community_cards + $this->cards);
+    $hand->setCards(array_merge($community_cards,$this->cards));
     
     if ($hand->isStraightFlush()) {
       return Hand::STRAIGHT_FLUSH;
