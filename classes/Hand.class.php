@@ -99,4 +99,46 @@ class Hand
   {
     return $this->highest_card;
   }
+  
+  public function getLowestNumber()
+  {
+    return min(array_keys($this->numbers));
+  }
+  
+  public function isStraight()
+  {
+    $numbers = array_keys($this->numbers);
+    sort($numbers);
+    
+    $is_straight = false;
+    
+    foreach ($numbers as $base) {
+      $target = $base + 4;
+      if (in_array($target, $numbers)) {
+        for ($i=1; $i <= 4; $i++) { 
+          $target = $base + $i;
+          if (!in_array($target, $numbers)) {
+            continue 2;
+          }
+        }
+        
+        $is_straight = true;
+      }
+    }
+    
+    // One final check for a royal straight.
+    if ($numbers[0] == 1) {
+      for ($i=13; $i >= 10; $i--) { 
+        if (!in_array($i, $numbers)) {
+          goto no_chance;
+        }
+      }
+      
+      $is_straight = true;
+    }
+    
+    // I used goto! Woohoo!
+    no_chance:
+    return $is_straight;
+  }
 }

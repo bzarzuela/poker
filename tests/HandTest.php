@@ -165,4 +165,59 @@ class HandTest extends PHPUnit_Framework_TestCase
     $this->assertFalse($hand->isFullHouse());
   }
   
+  public function testStraight()
+  {
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D5'),
+      new Card('D2'),
+      new Card('D3'),
+      new Card('D4'),
+      new Card('D1'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertTrue($hand->isStraight());
+    
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D1'),
+      new Card('D2'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+      new Card('D8'),
+      new Card('D9'),
+    ]);
+    
+    $this->assertTrue($hand->isStraight());
+    
+    $hand->setCards([
+      new Card('D2'),
+      new Card('D3'),
+      new Card('D4'),
+      new Card('D5'),
+      new Card('D7'),
+      new Card('D8'),
+      new Card('D9'),
+    ]);
+    
+    $this->assertFalse($hand->isStraight());
+    
+    // Royal Straight
+    
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D1'),
+      new Card('D13'),
+      new Card('D12'),
+      new Card('D11'),
+      new Card('D10'),
+      new Card('D5'),
+      new Card('D4'),
+    ]);
+    
+    $this->assertTrue($hand->isStraight());
+  }
 }
