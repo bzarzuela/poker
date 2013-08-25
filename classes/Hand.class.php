@@ -146,31 +146,35 @@ class Hand
   public function isStraight()
   {
     $numbers = array_keys($this->numbers);
-    sort($numbers);
+    rsort($numbers);
     
     $is_straight = false;
     
     foreach ($numbers as $base) {
-      $target = $base + 4;
+      $target = $base - 4;
       if (in_array($target, $numbers)) {
-        for ($i=1; $i <= 4; $i++) { 
-          $target = $base + $i;
+        for ($i=4; $i >= 1; $i--) { 
+          $target = $base - $i;
           if (!in_array($target, $numbers)) {
             continue 2;
           }
         }
+        
+        $this->kicker = $numbers[4];
         
         $is_straight = true;
       }
     }
     
     // One final check for a royal straight.
-    if ($numbers[0] == 1) {
+    if ($numbers[max(array_keys($numbers))] == 1) {
       for ($i=13; $i >= 10; $i--) { 
         if (!in_array($i, $numbers)) {
           goto no_chance;
         }
       }
+      
+      $this->kicker = 14; // Special case for Aces in Royal Straights
       
       $is_straight = true;
     }

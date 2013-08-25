@@ -379,4 +379,79 @@ class GameTest extends PHPUnit_Framework_TestCase
     $this->assertEquals($player2, $game->getWinner());
 
   }
+  
+  public function testStraight()
+  {
+    $community = [
+      new Card('D12'),
+      new Card('D11'),
+      new Card('D10'),
+      new Card('D9'),
+      new Card('C12'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H8'),
+      new Card('S9'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S8'),
+      new Card('H9'),
+    ]);
+    
+    $player3 = new Player;
+    $player3->setName('Player 3')->setCards([
+      new Card('H7'),
+      new Card('C7'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->addPlayer($player3);
+    $game->play();
+    
+    $this->assertEquals(Hand::STRAIGHT, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::STRAIGHT, $player2->peekAtCards($community));
+    $this->assertEquals(Hand::TWO_PAIR, $player3->peekAtCards($community));
+    $this->assertEquals([$player1, $player2], $game->getWinner());
+    
+    $community = [
+      new Card('D7'),
+      new Card('D11'),
+      new Card('D10'),
+      new Card('D9'),
+      new Card('C2'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H12'),
+      new Card('C8'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S8'),
+      new Card('H9'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::STRAIGHT, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::STRAIGHT, $player2->peekAtCards($community));
+    $this->assertEquals($player1, $game->getWinner());
+  }
 }

@@ -98,6 +98,7 @@ class Game
       case Hand::QUAD:
       case Hand::FULL_HOUSE:
       case Hand::FLUSH:
+      case Hand::STRAIGHT:
         return $finalist->getHand()->getKicker();
       break;
       
