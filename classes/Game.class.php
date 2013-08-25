@@ -70,30 +70,33 @@ class Game
     } else {
       $this->logger->debug('Finalists: ' . implode(', ', $finalists));
       
-      $winner = $finalists[0];
-      for ($i=1; $i < count($finalists); $i++) { 
-        
-        $challenger = $finalists[$i];
-        
-        // Would love to redo this piece for clarity.
-        // It looks more like Ruby than PHP.
-        if ($this->is($challenger)->betterThan($winner)) {
-          $winner = $challenger;
-        }
+      $rankings = [];
+      foreach ($finalists as $finalist) {
+        $rankings[$this->rankFinalist($finalist)][] = $finalist;
       }
       
-      $this->setWinner($winner);
-      $this->logger->debug('Winner: ' . $winner);
+      $highest_rank = max(array_keys($rankings));
+      if (count($rankings[$highest_rank]) == 1) {
+        $winner = $rankings[$highest_rank][0];
+        $this->setWinner($winner);
+        $this->logger->debug('Winner: ' . $winner);
+      } else {
+        $this->logger->debug('A tie between : ' . implode(', ', $rankings[$highest_rank]));
+        $this->setWinner($rankings[$highest_rank]);
+      }
     }
     
   }
   
-  // Method used for chaining when there are challengers.
-  public function betterThan(Player $winner)
+  public function rankFinalist($finalist)
   {
-    switch ($winner->getHand()->getRank()) {
+    switch ($finalist->getHand()->getRank()) {
       case Hand::STRAIGHT_FLUSH:
-        return $this->compareStraightFlush($this->challenger, $winner);
+        return $finalist->getHand()->getHighestCard()->getValue();
+      break;
+      
+      case Hand::QUAD:
+        return $finalist->getHand()->getKicker();
       break;
       
       default:
@@ -102,15 +105,14 @@ class Game
     }
   }
   
-  // Method used for chaining when there are challengers.
-  public function is(Player $challenger)
-  {
-    $this->challenger = $challenger;
-    return $this;
-  }
   
-  
-  public function setWinner(Player $player) 
+  /**
+   * In cases of a tie, the $player can be an array of winners.
+   *
+   * @param mixed $player 
+   * @return $this
+   */
+  public function setWinner($player) 
   {
     $this->winner = $player;
     return $this;
@@ -143,6 +145,27 @@ class Game
   {
     $challenger_rank = $challenger->getHand()->getHighestCard()->getValue();
     $winner_rank = $winner->getHand()->getHighestCard()->getValue();
+    
+    $this->logger->debug($challenger . ' Card Value: ' . $challenger_rank);
+    $this->logger->debug($winner . ' Card Value: ' . $winner_rank);
+    
+    if ($challenger_rank > $winner_rank) {
+      return true;
+    }
+    
+    if ($challenger_rank < $winner_rank) {
+      return false;
+    }
+    
+    if ($challenger_rank == $winner_rank) {
+      throw new Exception("The world just ended.");
+    }
+  }
+  
+  public function compareQuadKicker($challenger, $winner)
+  {
+    $challenger_rank = $challenger->getHand()->getKicker()->getValue();
+    $winner_rank = $winner->getHand()->getKicker()->getValue();
     
     $this->logger->debug($challenger . ' Card Value: ' . $challenger_rank);
     $this->logger->debug($winner . ' Card Value: ' . $winner_rank);

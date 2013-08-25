@@ -8,7 +8,9 @@ class Hand
   private $cards = [];
   private $suits = [];
   private $numbers = [];
+  
   private $highest_card = null;
+  private $kicker = null;
   
   private $rank = 0;
   
@@ -69,7 +71,23 @@ class Hand
   
   public function isQuad()
   {
-    return $this->countPairs(4);
+    $ret = $this->countPairs(4);
+    if ($ret) {
+      // Set the highest kicker for later comparison
+      $numbers = $this->numbers;
+      $this->kicker = 0;
+      foreach ($numbers as $number => $cards) {
+        if (count($cards) != 4) {
+          foreach ($cards as $card) {
+            if ($card->getNumber() > $this->kicker) {
+              $this->kicker = $card->getNumber();
+            }
+          }
+        }
+      }
+    }
+    
+    return $ret;
   }
   
   public function isTriple()
@@ -305,5 +323,10 @@ class Hand
     
     return $map[$this->rank];
     
+  }
+  
+  public function getKicker()
+  {
+    return $this->kicker;
   }
 }
