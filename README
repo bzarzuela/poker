@@ -1,10 +1,25 @@
-Poker
+[Poker]
 
 An algorithm that ranks a set of poker hands using TEXAS HOLD-EM rules (5 community cards, 2 private cards) for 2-6 players, and then ranks those hands from best to worst according to traditional poker hand ranking rules. 
 
-Usage
+[Usage]
 
 php poker.php [number of players]
 
 The script will randomly assign the number of players if not specified.
 
+[Details]
+
+Determining the type of hand involves using different hashes to easily determine whether there are flushes or straights. The straight determination is a bit optimized in that it looks for the presence of the min and max values given a potential range.
+
+Function array dereferencing is used so PHP 5.4 is required.
+
+PHPUnit 3.7.8 was used. Just run phpunit tests and it should pass all the tests.
+PHP 5.4.12 was used with E_ALL set on error_reporting. No warnings raised.
+
+[Things to improve on]
+
+1. Make the tie-breakers more elegant. 
+2. The hand type mapping feels off.
+3. Use namespaces.
+4. Use Symfony2's Universal ClassLoader.
