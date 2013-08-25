@@ -30,6 +30,11 @@ class Player
     $this->cards = $cards;
   }
   
+  public function getCards()
+  {
+    return $this->cards;
+  }
+  
   public function peekAtCards($community_cards)
   {
     $hand = new Hand;
