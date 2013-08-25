@@ -14,6 +14,9 @@ class Hand
   public function setCards($cards)
   {
     $this->cards = [];
+    $this->suits = [];
+    $this->numbers = [];
+    $this->highest_card = null;
     
     $highest_value = 0;
     
@@ -66,6 +69,30 @@ class Hand
   public function isPair()
   {
     return $this->countPairs(2);
+  }
+  
+  public function isFullHouse()
+  {
+    $has_triple = false;
+    $has_pair = false;
+    
+    $numbers = $this->numbers;
+    foreach ($numbers as $number => $cards) {
+      if (count($cards) == 3) {
+        $has_triple = true;
+        unset($numbers[$number]);
+        break;
+      }
+    }
+    
+    foreach ($numbers as $number => $cards) {
+      if (count($cards) >= 2) {
+        $has_pair = true;
+        break;
+      }
+    }
+    
+    return $has_triple and $has_pair;
   }
   
   public function getHighestCard()

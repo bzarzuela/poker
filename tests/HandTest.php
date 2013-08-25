@@ -109,4 +109,60 @@ class HandTest extends PHPUnit_Framework_TestCase
     $this->assertNotEquals($lowest, $hand->getHighestCard());
   }
   
+  public function testFullHouse()
+  {
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('C3'),
+      new Card('D3'),
+      new Card('S3'),
+      new Card('H7'),
+      new Card('D7'),
+      new Card('D8'),
+      new Card('D9'),
+    ]);
+    
+    $this->assertTrue($hand->isFullHouse());
+    
+    $hand->setCards([
+      new Card('D3'),
+      new Card('H3'),
+      new Card('C3'),
+      new Card('D7'),
+      new Card('H7'),
+      new Card('C7'),
+      new Card('D9'),
+    ]);
+    
+    $this->assertTrue($hand->isFullHouse());
+    
+    
+    // Absurd test because why would you play a full house instead of a quad 
+    // but it IS a full house.
+    $hand->setCards([
+      new Card('D3'),
+      new Card('H3'),
+      new Card('C3'),
+      new Card('D7'),
+      new Card('H7'),
+      new Card('S7'),
+      new Card('C7'),
+    ]);
+    
+    $this->assertTrue($hand->isFullHouse());
+    
+    // Sanity Check. LOL
+    $hand->setCards([
+      new Card('D3'),
+      new Card('H3'),
+      new Card('C4'),
+      new Card('D2'),
+      new Card('H2'),
+      new Card('S7'),
+      new Card('C7'),
+    ]);
+    
+    $this->assertFalse($hand->isFullHouse());
+  }
+  
 }
