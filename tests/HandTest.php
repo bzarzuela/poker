@@ -45,4 +45,32 @@ class HandTest extends PHPUnit_Framework_TestCase
     $this->assertFalse($hand->isFlush());
   }
   
+  public function testQuad()
+  {
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('C3'),
+      new Card('D3'),
+      new Card('S3'),
+      new Card('H3'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertTrue($hand->isQuad());
+    
+    $hand->setCards([
+      new Card('C3'),
+      new Card('D3'),
+      new Card('S3'),
+      new Card('H4'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertFalse($hand->isQuad());
+  }
+  
 }
