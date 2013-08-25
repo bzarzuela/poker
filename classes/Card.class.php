@@ -8,6 +8,13 @@ class Card
   private $number;
   private $suit;
   
+  private $friendly_map = [
+    1 => 'A',
+    11 => 'J',
+    12 => 'Q',
+    13 => 'K',
+  ];
+  
   public function __construct($code)
   {
     $this->suit = substr($code, 0, 1);
@@ -16,6 +23,22 @@ class Card
   
   public function __toString()
   {
-    return $this->suit . $this->number;
+    $number = $this->number;
+
+    if (isset($this->friendly_map[$number])) {
+      $number = $this->friendly_map[$number];
+    }
+
+    return $this->suit . $number;
+  }
+  
+  public function getSuit()
+  {
+    return $this->suit;
+  }
+  
+  public function getNumber()
+  {
+    return $this->number;
   }
 }
