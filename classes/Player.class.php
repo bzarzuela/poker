@@ -6,6 +6,7 @@
 class Player
 {
   private $name;
+  private $cards = [];
   
   public function __toString()
   {
@@ -16,5 +17,10 @@ class Player
   {
     $this->name = $name;
     return $this;
+  }
+  
+  public function setCards($cards)
+  {
+    $this->cards = $cards;
   }
 }
