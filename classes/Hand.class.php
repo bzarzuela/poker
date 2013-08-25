@@ -11,7 +11,13 @@ class Hand
   
   private $highest_card = null;
   private $kicker = null;
+  
+  // Used in one pair tie-breakers
+  private $kickers = [];
+  
+  // Used for tie-breakers for triple and two pairs.
   private $highest_triple = null;
+  private $highest_pair = [];
   
   private $rank = 0;
   
@@ -118,7 +124,24 @@ class Hand
   
   public function isPair()
   {
-    return $this->countPairs(2);
+    $numbers = $this->numbers;
+    $ret = false;
+    
+    foreach ($numbers as $number => $cards) {
+      if (count($cards) == 2) {
+        unset($numbers[$number]);
+        $this->highest_pair[1] = $cards[0]->getNumber();
+        $ret = true;
+      }
+    }
+    
+    if ($ret) {
+      foreach ($numbers as $number => $cards) {
+        $this->kickers[$cards[0]->getValue()] = $cards[0]->getNumber();
+      }
+    }
+    
+    return $ret;
   }
   
   public function isFullHouse()
@@ -254,6 +277,7 @@ class Hand
   public function isTwoPair()
   {
     $numbers = $this->numbers;
+    rsort($numbers);
     $pairs = [
       1 => false,
       2 => false,
@@ -263,6 +287,7 @@ class Hand
       foreach ($numbers as $number => $cards) {
         if (count($cards) >= 2) {
           $pairs[$i] = true;
+          $this->highest_pair[$i] = $cards[0]->getNumber();
           unset($numbers[$number]);
           break;
         }
@@ -359,5 +384,15 @@ class Hand
   public function getHighestTriple()
   {
     return $this->highest_triple;
+  }
+  
+  public function getHighestPair()
+  {
+    return $this->highest_pair;
+  }
+  
+  public function getKickers()
+  {
+    return $this->kickers;
   }
 }

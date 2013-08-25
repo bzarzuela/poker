@@ -522,4 +522,214 @@ class GameTest extends PHPUnit_Framework_TestCase
     $this->assertEquals($player1, $game->getWinner());
     
   }
+  
+  public function testTwoPair()
+  {
+    $community = [
+      new Card('C3'),
+      new Card('C2'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H7'),
+      new Card('H2'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S3'),
+      new Card('S2'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::TWO_PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::TWO_PAIR, $player2->peekAtCards($community));
+    $this->assertEquals($player1, $game->getWinner());
+  }
+  
+  public function testTwoPairSecondPair()
+  {
+    $community = [
+      new Card('C3'),
+      new Card('C2'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H7'),
+      new Card('H2'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S7'),
+      new Card('S6'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::TWO_PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::TWO_PAIR, $player2->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+  }
+  
+  public function testPair()
+  {
+    $community = [
+      new Card('D3'),
+      new Card('H4'),
+      new Card('S6'),
+      new Card('C7'),
+      new Card('D8'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H7'),
+      new Card('H2'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S9'),
+      new Card('C8'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::PAIR, $player2->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+  }
+  
+  public function testPairKickers()
+  {
+    $community = [
+      new Card('D12'),
+      new Card('H13'),
+      new Card('S11'),
+      new Card('C7'),
+      new Card('D10'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H7'),
+      new Card('H2'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S7'),
+      new Card('C8'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::PAIR, $player2->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+  }
+  
+  public function testPairTie()
+  {
+    $community = [
+      new Card('D12'),
+      new Card('H13'),
+      new Card('S11'),
+      new Card('C7'),
+      new Card('D10'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H7'),
+      new Card('H8'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S7'),
+      new Card('C8'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::PAIR, $player2->peekAtCards($community));
+    $this->assertEquals([$player1, $player2], $game->getWinner());
+  }
+  
+  public function testHighCard()
+  {
+    $community = [
+      new Card('D3'),
+      new Card('H4'),
+      new Card('S6'),
+      new Card('C8'),
+      new Card('D9'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('D10'),
+      new Card('D1'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S2'),
+      new Card('C11'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::HIGH_CARD, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::HIGH_CARD, $player2->peekAtCards($community));
+    $this->assertEquals($player1, $game->getWinner());
+  }
 }

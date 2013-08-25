@@ -97,9 +97,49 @@ class Game
           $this->setWinner($winner);
           $this->logger->debug('Triple Winner: ' . $winner);
           
+        } elseif ($finalist->getHand()->getRank() == Hand::TWO_PAIR) {
+          
+          // Fuck, getting messy.
+          
+          $finalists = $rankings[$highest_rank];
+          $rankings = [];
+
+          // One more ranking, this time, using the second pair
+          foreach ($finalists as $finalist) {
+            $rankings[$finalist->getHand()->getHighestPair()[2]][] = $finalist;
+          }
+          
+          $highest_rank = max(array_keys($rankings));
+          $winner = $rankings[$highest_rank][0];
+          $this->setWinner($winner);
+          $this->logger->debug('Triple Winner: ' . $winner);
+          
+        } elseif ($finalist->getHand()->getRank() == Hand::PAIR) {
+          
+          // Who knew the last ones would be the most complicated to break the tie?
+          
+          $finalists = $rankings[$highest_rank];
+          foreach ($finalists as $finalist) {
+            foreach ($finalist->getHand()->getKickers() as $kicker) {
+              $kickers[$kicker][] = (string) $finalist;
+            }
+          }
+          krsort($kickers);
+          
+          foreach ($kickers as $finalists) {
+            if (count($finalists) == 1) {
+              $this->setWinner($finalists[0]);
+              return;
+            }
+          }
+          
+          // Can't break the tie.
+          $this->logger->debug('A tie between: ' . implode(', ', $finalists));
+          $this->setWinner($finalists);
+        
         } else {
 
-          $this->logger->debug('A tie between : ' . implode(', ', $rankings[$highest_rank]));
+          $this->logger->debug('A tie between: ' . implode(', ', $rankings[$highest_rank]));
           $this->setWinner($rankings[$highest_rank]);
 
         }
@@ -112,6 +152,7 @@ class Game
   {
     switch ($finalist->getHand()->getRank()) {
       case Hand::STRAIGHT_FLUSH:
+      case Hand::HIGH_CARD:
         return $finalist->getHand()->getHighestCard()->getValue();
       break;
       
@@ -124,6 +165,11 @@ class Game
       
       case Hand::TRIPLE:
         return $finalist->getHand()->getHighestTriple();
+      break;
+      
+      case Hand::TWO_PAIR:
+      case Hand::PAIR:
+        return $finalist->getHand()->getHighestPair()[1];
       break;
       
       default:
