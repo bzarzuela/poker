@@ -220,4 +220,61 @@ class HandTest extends PHPUnit_Framework_TestCase
     
     $this->assertTrue($hand->isStraight());
   }
+  
+  public function testStraightFlush()
+  {
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D10'),
+      new Card('D9'),
+      new Card('D3'),
+      new Card('D4'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertTrue($hand->isStraightFlush());
+    
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D10'),
+      new Card('D9'),
+      new Card('C3'),
+      new Card('D4'),
+      new Card('D5'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertFalse($hand->isStraightFlush());
+    
+    // Royal Flush Test
+    
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D1'),
+      new Card('D13'),
+      new Card('D12'),
+      new Card('D11'),
+      new Card('D10'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertTrue($hand->isStraightFlush());
+    
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('C1'),
+      new Card('D13'),
+      new Card('D12'),
+      new Card('D11'),
+      new Card('D10'),
+      new Card('D6'),
+      new Card('D7'),
+    ]);
+    
+    $this->assertFalse($hand->isStraightFlush());
+  }
 }

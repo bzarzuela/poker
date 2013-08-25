@@ -141,4 +141,58 @@ class Hand
     no_chance:
     return $is_straight;
   }
+  
+  public function isStraightFlush()
+  {
+    if (!$this->isStraight()) {
+      return false;
+    }
+    
+    if (!$this->isFlush()) {
+      return false;
+    }
+    
+    // Check if both the straight and flush cards are the same.
+    $numbers = [];
+    foreach ($this->suits as $cards) {
+      if (count($cards) >= 5) {
+        foreach ($cards as $card) {
+          $numbers[] = $card->getNumber();
+        }
+        break;
+      }
+    }
+    
+    sort($numbers);
+    
+    $checks_out = false;
+    
+    $base = $numbers[0];
+    
+    $target = $base + 4;
+    if (in_array($target, $numbers)) {
+      for ($i=1; $i <= 4; $i++) { 
+        $target = $base + $i;
+        if (!in_array($target, $numbers)) {
+          goto no_chance;
+        }
+      }
+      
+      $checks_out = true;
+    }
+    
+    // One final check for a royal flush.
+    if ($base == 1) {
+      for ($i=13; $i >= 10; $i--) { 
+        if (!in_array($i, $numbers)) {
+          goto no_chance;
+        }
+      }
+      
+      $checks_out = true;
+    }
+    
+    no_chance:
+    return $checks_out;
+  }
 }
