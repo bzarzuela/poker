@@ -9,6 +9,8 @@ class Hand
   private $suits = [];
   private $numbers = [];
   
+  
+  
   public function setCards($cards)
   {
     $this->cards = [];
@@ -16,18 +18,8 @@ class Hand
     foreach ($cards as $card) {
       $this->cards[$card->getSuit()][$card->getNumber()] = $card;
       
-      if (isset($this->suits[$card->getSuit()])) {
-        $this->suits[$card->getSuit()]++;
-      } else {
-        $this->suits[$card->getSuit()] = 1;
-      }
-      
-      if (isset($this->numbers[$card->getNumber()])) {
-        $this->numbers[$card->getNumber()]++;
-      } else {
-        $this->numbers[$card->getNumber()] = 1;
-      }
-      
+      $this->suits[$card->getSuit()][] = $card;
+      $this->numbers[$card->getNumber()][] = $card;
     }
     return $this;
   }
@@ -45,8 +37,8 @@ class Hand
   
   public function isQuad()
   {
-    foreach ($this->numbers as $number => $count) {
-      if ($count == 4) {
+    foreach ($this->numbers as $number => $cards) {
+      if (count($cards) == 4) {
         return true;
       }
     }
