@@ -1,0 +1,9 @@
+<?php 
+
+/**
+* Player
+*/
+class Player
+{
+  
+}
