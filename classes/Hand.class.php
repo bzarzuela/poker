@@ -10,6 +10,15 @@ class Hand
   private $numbers = [];
   private $highest_card = null;
   
+  const HIGH_CARD = 1;
+  const PAIR = 2;
+  const TWO_PAIR = 3;
+  const TRIPLE = 4;
+  const STRAIGHT = 5;
+  const FLUSH = 6;
+  const FULL_HOUSE = 7;
+  const QUAD = 8;
+  const STRAIGHT_FLUSH = 9;
   
   public function setCards($cards)
   {
@@ -194,5 +203,26 @@ class Hand
     
     no_chance:
     return $checks_out;
+  }
+  
+  public function isTwoPair()
+  {
+    $numbers = $this->numbers;
+    $pairs = [
+      1 => false,
+      2 => false,
+    ];
+    
+    for ($i=1; $i <= 2; $i++) { 
+      foreach ($numbers as $number => $cards) {
+        if (count($cards) >= 2) {
+          $pairs[$i] = true;
+          unset($numbers[$number]);
+          break;
+        }
+      }
+    }
+    
+    return $pairs[1] and $pairs[2];
   }
 }

@@ -50,8 +50,9 @@ class Game
   {
     $hands = [];
     foreach ($this->players as $player) {
-      $hand = $player->getBestHand($this->community_cards);
-      // $hands[$hand->getStrength()] = $hand;
+      $hands[$player->getName()] = $player->peekAtCards($this->community_cards);
     }
+    
+    print_r($hands);
   }
 }

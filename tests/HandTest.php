@@ -277,4 +277,34 @@ class HandTest extends PHPUnit_Framework_TestCase
     
     $this->assertFalse($hand->isStraightFlush());
   }
+  
+  public function testPair()
+  {
+    $hand = new Hand;
+    $hand->setCards([
+      new Card('D1'),
+      new Card('C1'),
+      new Card('D2'),
+      new Card('C2'),
+      new Card('D3'),
+      new Card('D4'),
+      new Card('D5'),
+    ]);
+    
+    $this->assertTrue($hand->isPair());
+    $this->assertTrue($hand->isTwoPair());
+    
+    $hand->setCards([
+      new Card('D1'),
+      new Card('C7'),
+      new Card('D2'),
+      new Card('C2'),
+      new Card('D3'),
+      new Card('D4'),
+      new Card('D5'),
+    ]);
+    
+    $this->assertTrue($hand->isPair());
+    $this->assertFalse($hand->isTwoPair());
+  }
 }
