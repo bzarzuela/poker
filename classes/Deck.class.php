@@ -1,0 +1,9 @@
+<?php 
+
+/**
+* Deck
+*/
+class Deck
+{
+  
+}
