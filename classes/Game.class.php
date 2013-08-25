@@ -45,4 +45,13 @@ class Game
       $this->logger->debug($player . ' Cards: ' . implode(', ', $cards));
     }
   }
+  
+  public function play()
+  {
+    $hands = [];
+    foreach ($this->players as $player) {
+      $hand = $player->getBestHand($this->community_cards);
+      // $hands[$hand->getStrength()] = $hand;
+    }
+  }
 }

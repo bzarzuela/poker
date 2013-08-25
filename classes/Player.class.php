@@ -23,4 +23,10 @@ class Player
   {
     $this->cards = $cards;
   }
+  
+  public function getBestHand($community_cards)
+  {
+    $hand = new Hand;
+    $hand->setCards($community_cards + $this->cards);
+  }
 }

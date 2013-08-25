@@ -21,3 +21,5 @@ for ($i=1; $i <= $players; $i++) {
 }
 
 $game->deal();
+
+$game->play();
