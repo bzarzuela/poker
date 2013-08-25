@@ -167,7 +167,7 @@ class GameTest extends PHPUnit_Framework_TestCase
     ];
     
     $game = new Game;
-    $game->setLogger(new Logger);
+    $game->setLogger(new MockLogger);
     $game->setCommunityCards($community);
     
     $player1 = new Player;
@@ -199,6 +199,94 @@ class GameTest extends PHPUnit_Framework_TestCase
     $this->assertEquals([$player1, $player2], $game->getWinner());
     
     
+
+  }
+  
+  public function testFullHouse()
+  {
+    $community = [
+      new Card('D3'),
+      new Card('H3'),
+      new Card('S3'),
+      new Card('C2'),
+      new Card('S4'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('D8'),
+      new Card('C8'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('D9'),
+      new Card('C9'),
+    ]);
+    
+    $player3 = new Player;
+    $player3->setName('Player 3')->setCards([
+      new Card('D7'),
+      new Card('C7'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->addPlayer($player3);
+    $game->play();
+    
+    $this->assertEquals(Hand::FULL_HOUSE, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::FULL_HOUSE, $player2->peekAtCards($community));
+    $this->assertEquals(Hand::FULL_HOUSE, $player3->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+
+  }
+
+  public function testFullHouseTie()
+  {
+    $community = [
+      new Card('D3'),
+      new Card('H3'),
+      new Card('S3'),
+      new Card('C2'),
+      new Card('S4'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('D9'),
+      new Card('C9'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S9'),
+      new Card('H9'),
+    ]);
+    
+    $player3 = new Player;
+    $player3->setName('Player 3')->setCards([
+      new Card('D7'),
+      new Card('C7'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->addPlayer($player3);
+    $game->play();
+    
+    $this->assertEquals(Hand::FULL_HOUSE, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::FULL_HOUSE, $player2->peekAtCards($community));
+    $this->assertEquals(Hand::FULL_HOUSE, $player3->peekAtCards($community));
+    $this->assertEquals([$player1, $player2], $game->getWinner());
 
   }
 }

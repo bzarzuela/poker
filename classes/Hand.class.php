@@ -117,6 +117,7 @@ class Hand
     foreach ($numbers as $number => $cards) {
       if (count($cards) >= 2) {
         $has_pair = true;
+        $this->kicker = $cards[0]->getNumber();
         break;
       }
     }

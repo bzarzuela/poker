@@ -96,6 +96,7 @@ class Game
       break;
       
       case Hand::QUAD:
+      case Hand::FULL_HOUSE:
         return $finalist->getHand()->getKicker();
       break;
       
