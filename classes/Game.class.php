@@ -97,6 +97,7 @@ class Game
       
       case Hand::QUAD:
       case Hand::FULL_HOUSE:
+      case Hand::FLUSH:
         return $finalist->getHand()->getKicker();
       break;
       
@@ -126,6 +127,9 @@ class Game
   
   public function setCommunityCards($cards)
   {
+    foreach ($cards as $card) {
+      $card->setCommunity(true);
+    }
     $this->community_cards = $cards;
     return $this;
   }

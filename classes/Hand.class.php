@@ -49,8 +49,16 @@ class Hand
   
   public function isFlush()
   {
-    foreach ($this->cards as $suit => $numbers) {
+    $cards = $this->cards;
+    foreach ($cards as $suit => $numbers) {
       if (count($numbers) >= 5) {
+        
+        foreach ($numbers as $card) {
+          if (!$card->isCommunity()) {
+            $this->kicker = ($card->getNumber() > $this->kicker) ? $card->getNumber() : $this->kicker;
+          }
+        }
+        
         return true;
       }
     }

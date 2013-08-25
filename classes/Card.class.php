@@ -7,6 +7,7 @@ class Card
 {
   private $number;
   private $suit;
+  private $community = false;
   
   private $friendly_map = [
     1 => 'A',
@@ -50,5 +51,16 @@ class Card
   public function getValue()
   {
     return Deck::getInstance()->getValue($this->getCode());
+  }
+  
+  public function isCommunity()
+  {
+    return $this->community;
+  }
+  
+  public function setCommunity($value)
+  {
+    $this->community = $value;
+    return $this;
   }
 }

@@ -289,4 +289,94 @@ class GameTest extends PHPUnit_Framework_TestCase
     $this->assertEquals([$player1, $player2], $game->getWinner());
 
   }
+  
+  public function testFlush()
+  {
+    $community = [
+      new Card('D1'),
+      new Card('D10'),
+      new Card('D6'),
+      new Card('D2'),
+      new Card('S4'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H8'),
+      new Card('C8'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('D9'),
+      new Card('C9'),
+    ]);
+    
+    $player3 = new Player;
+    $player3->setName('Player 3')->setCards([
+      new Card('S7'),
+      new Card('C7'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->addPlayer($player3);
+    $game->play();
+    
+    $this->assertEquals(Hand::PAIR, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::FLUSH, $player2->peekAtCards($community));
+    $this->assertEquals(Hand::PAIR, $player3->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+
+  }
+
+  public function testFlushCommunalTie()
+  {
+    // Wikipedia didn't say what to do if all the cards were communal so one card won't be.
+    
+    $community = [
+      new Card('D1'),
+      new Card('D10'),
+      new Card('D6'),
+      new Card('D2'),
+      new Card('C12'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('D3'),
+      new Card('S9'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('D4'),
+      new Card('H9'),
+    ]);
+    
+    $player3 = new Player;
+    $player3->setName('Player 3')->setCards([
+      new Card('H7'),
+      new Card('C7'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->addPlayer($player3);
+    $game->play();
+    
+    $this->assertEquals(Hand::FLUSH, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::FLUSH, $player2->peekAtCards($community));
+    $this->assertEquals(Hand::PAIR, $player3->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+
+  }
 }
