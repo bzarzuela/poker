@@ -10,6 +10,8 @@ class Hand
   private $numbers = [];
   private $highest_card = null;
   
+  private $rank = 0;
+  
   const HIGH_CARD = 1;
   const PAIR = 2;
   const TWO_PAIR = 3;
@@ -224,5 +226,84 @@ class Hand
     }
     
     return $pairs[1] and $pairs[2];
+  }
+  
+  public function compute()
+  {
+    if ($this->isStraightFlush()) {
+      $this->setRank(Hand::STRAIGHT_FLUSH);
+      return $this;
+    }
+    
+    if ($this->isQuad()) {
+      $this->setRank(Hand::QUAD);
+      return $this;
+    }
+    
+    if ($this->isFullHouse()) {
+      $this->setRank(Hand::FULL_HOUSE);
+      return $this;
+    }
+    
+    if ($this->isFlush()) {
+      $this->setRank(Hand::FLUSH);
+      return $this;
+    }
+    
+    if ($this->isStraight()) {
+      $this->setRank(Hand::STRAIGHT);
+      return $this;
+    }
+    
+    if ($this->isTriple()) {
+      $this->setRank(Hand::TRIPLE);
+      return $this;
+    }
+    
+    if ($this->isTwoPair()) {
+      $this->setRank(Hand::TWO_PAIR);
+      return $this;
+    }
+    
+    if ($this->isPair()) {
+      $this->setRank(Hand::PAIR);
+      return $this;
+    }
+    
+    $this->setRank(Hand::HIGH_CARD);
+    return $this;
+  }
+  
+  public function setRank($rank)
+  {
+    $this->rank = $rank;
+    return $this;
+  }
+  
+  public function getRank()
+  {
+    return $this->rank;
+  }
+  
+  public function getDescription()
+  {
+    $map = [
+      9 => 'Straight flush',
+      8 => 'Four of a kind',
+      7 => 'Full house',
+      6 => 'Flush',
+      5 => 'Straight',
+      4 => 'Three of a kind',
+      3 => 'Two pair',
+      2 => 'One pair',
+      1 => 'High Card',
+    ];
+    
+    if (!isset($map[$this->rank])) {
+      throw new Exception("Hand not computed");
+    }
+    
+    return $map[$this->rank];
+    
   }
 }

@@ -51,10 +51,18 @@ class Game
     $hands = [];
     foreach ($this->players as $player) {
       $rank = $player->peekAtCards($this->community_cards);
-      $name = $player->getName();
-      $hands[$rank][] = $name;
+      $hands[$rank][] = $player;
     }
     
-    print_r($hands);
+    $finalists = $hands[max(array_keys($hands))];
+    
+    $this->logger->debug('Hand: ' . $finalists[0]->getHand()->getDescription());
+    
+    if (count($finalists) == 1) {
+      $this->logger->debug('Winner: ' . $finalists[0]);
+    } else {
+      $this->logger->debug('Finalists: ' . implode(', ', $finalists));
+    }
+    
   }
 }

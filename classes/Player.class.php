@@ -7,6 +7,7 @@ class Player
 {
   private $name;
   private $cards = [];
+  private $hand = null;
   
   public function __toString()
   {
@@ -33,39 +34,13 @@ class Player
   {
     $hand = new Hand;
     $hand->setCards(array_merge($community_cards,$this->cards));
-    
-    if ($hand->isStraightFlush()) {
-      return Hand::STRAIGHT_FLUSH;
-    }
-    
-    if ($hand->isQuad()) {
-      return Hand::QUAD;
-    }
-    
-    if ($hand->isFullHouse()) {
-      return Hand::FULL_HOUSE;
-    }
-    
-    if ($hand->isFlush()) {
-      return Hand::FLUSH;
-    }
-    
-    if ($hand->isStraight()) {
-      return Hand::STRAIGHT;
-    }
-    
-    if ($hand->isTriple()) {
-      return Hand::TRIPLE;
-    }
-    
-    if ($hand->isTwoPair()) {
-      return Hand::TWO_PAIR;
-    }
-    
-    if ($hand->isPair()) {
-      return Hand::PAIR;
-    }
-    
-    return Hand::HIGH_CARD;
+    $hand->compute();
+    $this->hand = $hand;
+    return $hand->getRank();
+  }
+  
+  public function getHand()
+  {
+    return $this->hand;
   }
 }
