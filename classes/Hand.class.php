@@ -11,6 +11,7 @@ class Hand
   
   private $highest_card = null;
   private $kicker = null;
+  private $highest_triple = null;
   
   private $rank = 0;
   
@@ -100,7 +101,19 @@ class Hand
   
   public function isTriple()
   {
-    return $this->countPairs(3);
+    $ret = $this->countPairs(3);
+    
+    if ($ret) {
+      $numbers = $this->numbers;
+      $this->highest_triple = 0;
+      foreach ($numbers as $number => $cards) {
+        if (count($cards) == 3) {
+          $this->highest_triple = $cards[0]->getNumber();
+        }
+      }
+    }
+    
+    return $ret;
   }
   
   public function isPair()
@@ -341,5 +354,10 @@ class Hand
   public function getKicker()
   {
     return $this->kicker;
+  }
+  
+  public function getHighestTriple()
+  {
+    return $this->highest_triple;
   }
 }

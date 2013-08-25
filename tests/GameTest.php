@@ -454,4 +454,72 @@ class GameTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(Hand::STRAIGHT, $player2->peekAtCards($community));
     $this->assertEquals($player1, $game->getWinner());
   }
+  
+  public function testTriple()
+  {
+    $community = [
+      new Card('C2'),
+      new Card('S9'),
+      new Card('C5'),
+      new Card('H8'),
+      new Card('C7'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('H2'),
+      new Card('S2'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S5'),
+      new Card('H5'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::TRIPLE, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::TRIPLE, $player2->peekAtCards($community));
+    $this->assertEquals($player2, $game->getWinner());
+    
+    $community = [
+      new Card('C2'),
+      new Card('S5'),
+      new Card('C5'),
+      new Card('H8'),
+      new Card('C7'),
+    ];
+    
+    $game = new Game;
+    $game->setLogger(new MockLogger);
+    $game->setCommunityCards($community);
+    
+    $player1 = new Player;
+    $player1->setName('Player 1')->setCards([
+      new Card('D5'),
+      new Card('S10'),
+    ]);
+    
+    $player2 = new Player;
+    $player2->setName('Player 2')->setCards([
+      new Card('S9'),
+      new Card('H5'),
+    ]);
+    
+    $game->addPlayer($player1);
+    $game->addPlayer($player2);
+    $game->play();
+    
+    $this->assertEquals(Hand::TRIPLE, $player1->peekAtCards($community));
+    $this->assertEquals(Hand::TRIPLE, $player2->peekAtCards($community));
+    $this->assertEquals($player1, $game->getWinner());
+    
+  }
 }

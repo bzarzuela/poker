@@ -81,8 +81,28 @@ class Game
         $this->setWinner($winner);
         $this->logger->debug('Winner: ' . $winner);
       } else {
-        $this->logger->debug('A tie between : ' . implode(', ', $rankings[$highest_rank]));
-        $this->setWinner($rankings[$highest_rank]);
+        
+        if ($finalist->getHand()->getRank() == Hand::TRIPLE) {
+
+          $finalists = $rankings[$highest_rank];
+          $rankings = [];
+
+          // One more ranking, this time, using the kicker
+          foreach ($finalists as $finalist) {
+            $rankings[$finalist->getHand()->getKicker()][] = $finalist;
+          }
+          
+          $highest_rank = max(array_keys($rankings));
+          $winner = $rankings[$highest_rank][0];
+          $this->setWinner($winner);
+          $this->logger->debug('Triple Winner: ' . $winner);
+          
+        } else {
+
+          $this->logger->debug('A tie between : ' . implode(', ', $rankings[$highest_rank]));
+          $this->setWinner($rankings[$highest_rank]);
+
+        }
       }
     }
     
@@ -102,8 +122,12 @@ class Game
         return $finalist->getHand()->getKicker();
       break;
       
+      case Hand::TRIPLE:
+        return $finalist->getHand()->getHighestTriple();
+      break;
+      
       default:
-        # code...
+        throw new Exception("Unhandled Tie: " . $finalist->getHand()->getRank());
       break;
     }
   }
