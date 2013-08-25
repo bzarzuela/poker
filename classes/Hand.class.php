@@ -8,18 +8,25 @@ class Hand
   private $cards = [];
   private $suits = [];
   private $numbers = [];
-  
+  private $highest_card = null;
   
   
   public function setCards($cards)
   {
     $this->cards = [];
     
+    $highest_value = 0;
+    
     foreach ($cards as $card) {
       $this->cards[$card->getSuit()][$card->getNumber()] = $card;
       
       $this->suits[$card->getSuit()][] = $card;
       $this->numbers[$card->getNumber()][] = $card;
+      
+      if ($card->getValue() > $highest_value) {
+        $highest_value = $card->getValue();
+        $this->highest_card = $card;
+      }
     }
     return $this;
   }
@@ -35,14 +42,34 @@ class Hand
     return false;
   }
   
-  public function isQuad()
+  private function countPairs($target)
   {
     foreach ($this->numbers as $number => $cards) {
-      if (count($cards) == 4) {
+      if (count($cards) == $target) {
         return true;
       }
     }
     
     return false;
+  }
+  
+  public function isQuad()
+  {
+    return $this->countPairs(4);
+  }
+  
+  public function isTriple()
+  {
+    return $this->countPairs(3);
+  }
+  
+  public function isPair()
+  {
+    return $this->countPairs(2);
+  }
+  
+  public function getHighestCard()
+  {
+    return $this->highest_card;
   }
 }

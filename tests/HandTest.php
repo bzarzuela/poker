@@ -73,4 +73,40 @@ class HandTest extends PHPUnit_Framework_TestCase
     $this->assertFalse($hand->isQuad());
   }
   
+  public function testHighestHand()
+  {
+    $hand = new Hand;
+    $highest = new Card('D1');
+    $lowest = new Card('C2');
+    
+    $hand->setCards([
+      $highest,
+      new Card('H1'),
+      new Card('S3'),
+      new Card('H3'),
+      new Card('D5'),
+      new Card('D6'),
+      $lowest,
+    ]);
+    
+    $this->assertEquals($highest, $hand->getHighestCard());
+    $this->assertNotEquals($lowest, $hand->getHighestCard());
+    
+    $highest = new Card('D1');
+    $lowest = new Card('C2');
+    
+    $hand->setCards([
+      $highest,
+      new Card('D2'),
+      new Card('S3'),
+      new Card('H3'),
+      new Card('D5'),
+      new Card('D6'),
+      $lowest,
+    ]);
+    
+    $this->assertEquals($highest, $hand->getHighestCard());
+    $this->assertNotEquals($lowest, $hand->getHighestCard());
+  }
+  
 }

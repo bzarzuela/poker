@@ -15,6 +15,15 @@ class Deck
   
   private $shuffled = [];
   
+  private static $instance = null;
+  
+  static public function getInstance() {
+    if (is_null(self::$instance)) {
+      self::$instance = new self;
+    } 
+    return self::$instance;
+  }
+  
   public function getValue($code)
   {
     $value = array_search($code, $this->value_map);

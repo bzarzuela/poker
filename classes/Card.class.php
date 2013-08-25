@@ -41,4 +41,14 @@ class Card
   {
     return $this->number;
   }
+  
+  public function getCode()
+  {
+    return $this->suit . $this->number;
+  }
+  
+  public function getValue()
+  {
+    return Deck::getInstance()->getValue($this->getCode());
+  }
 }
